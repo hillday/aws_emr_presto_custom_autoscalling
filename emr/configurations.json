@@ -1,0 +1,34 @@
+[
+    {
+        "Classification": "emrfs-site",
+        "Properties": {
+            "fs.s3.maxConnections": "50000"
+        }
+    },
+    {
+        "Classification": "presto-config",
+        "Properties": {
+            "node-scheduler.max-splits-per-node": "500",
+            "task.http-response-threads": "5000",
+            "query.remote-task.min-error-duration": "10m",
+            "exchange.http-client.request-timeout": "10m",
+            "query.max-memory-per-node": "10GB",
+            "query.min-expire-age": "30000m",
+            "query.execution-policy": "phased",
+            "query.max-total-memory-per-node": "15GB",
+            "query.max-history": "40000",
+            "query.remote-task.max-callback-threads": "5000",
+            "task.http-timeout-threads": "10",
+            "experimental.reserved-pool-enabled": "false",
+            "query.low-memory-killer.policy": "total-reservation-on-blocked-nodes",
+	    "query.client.timeout": "10m",
+            "query.max-memory": "300GB"
+        }
+    },
+    {
+        "Classification": "presto-connector-hive",
+        "Properties": {
+            "hive.metastore.glue.datacatalog.enabled": "true"
+        }
+    }
+]
