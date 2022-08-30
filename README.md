@@ -16,6 +16,7 @@
       - [创建Lambda 执行角色](#创建lambda-执行角色)
       - [创建Lambda 函数](#创建lambda-函数)
     - [设置EventBridge](#设置eventbridge)
+    - [验证AutoScalling](#验证autoscalling)
     - [使用到的框架](#使用到的框架)
     - [版本控制](#版本控制)
     - [作者](#作者)
@@ -53,6 +54,7 @@ aws_emr_presto_custom_autoscalling
 |  |  ├── instancegroupconfig.json # EMR 集群自定义扩缩策略配置
 ├── function.rb # lambda 函数
 ├── layer.zip # lambda 依赖层
+├── metrics.json # EMR Presto 指标和CloudWatch 指标映射配置
 ```
 
 ### 部署EMR Presto集群
@@ -149,7 +151,10 @@ Lambda 部署需要：
     > `REGION` 访问区域，默认为`us-east-1`
 
 5. 更新Lambda代码
-   把`function.rb`的代码更新到创建的函数`lambda_function`里去。通过测试验证函数是否可以正常执行。
+   把`function.rb`的代码更新到创建的函数`lambda_function`里去，创建`metrics.json`文件并把本地内容复制进去,然后`deploy`。
+   ![](./images/lambda-metrics-json.png)
+   通过`Test`可以验证Lambda是否可以正常运行。
+   ![](./images/lamdba-test.png)
 
 ### 设置EventBridge
 通过EventBridge定时调用Lambda实现自动上报EMR Presto的自定义指标信息。
@@ -159,6 +164,17 @@ Lambda 部署需要：
    ![](./images/eventbridge-cron.png)
 3. 选择目标（上一步创建的lambda）
    ![](./images/eventbridge-lambda.png)
+
+### 验证AutoScalling
+1. 向EMR Presto连续提交任务
+   ![](./images/presto-ui.png)
+2. 查看扩缩指标`PrestoInputBytes5m`变化情况
+   ![](./images/Input-stream.png)
+3. 查看EMR Presto集群Worker，`PrestoNumWorkerNodes
+`变化情况
+    ![](./images/worknodes.png)
+
+可以看出集群节点数进行扩缩。
 
 ### 使用到的框架
 

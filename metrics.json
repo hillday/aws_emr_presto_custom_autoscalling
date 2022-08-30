@@ -1,0 +1,15 @@
+[
+    {"presto_name":"abandoned_queries.total_count","cloudwatch_name":"PrestoNumAbandonedQueries","cloudwatch_unit":"Count","presto_metrics_type":"query"},
+    {"presto_name":"canceled_queries.total_count","cloudwatch_name":"PrestoNumCanceledQueries","cloudwatch_unit":"Count","presto_metrics_type":"query"},
+    {"presto_name":"completed_queries.total_count","cloudwatch_name":"PrestoNumCompletedQueries","cloudwatch_unit":"Count","presto_metrics_type":"query"}, 
+    {"presto_name":"consumed_input_bytes.five_minute.count","cloudwatch_name":"PrestoInputBytes5m","cloudwatch_unit":"Bytes","presto_metrics_type":"query"},
+    {"presto_name":"consumed_input_bytes.five_minute.rate","cloudwatch_name":"PrestoInputBytesRate5m","cloudwatch_unit":"Bytes/Second","presto_metrics_type":"query"},
+    {"presto_name":"consumed_input_rows.five_minute.count","cloudwatch_name":"PrestoInputRows5m","cloudwatch_unit":"Bytes","presto_metrics_type":"query"},
+    {"presto_name":"consumed_input_rows.five_minute.rate","cloudwatch_name":"PrestoInputRowsRate5m","cloudwatch_unit":"Bytes/Second","presto_metrics_type":"query"},
+    {"presto_name":"execution_time.five_minutes.avg","cloudwatch_name":"PrestoAvgQueryTime5m","cloudwatch_unit":"Milliseconds","presto_metrics_type":"query"},
+    {"presto_name":"failed_queries.total_count","cloudwatch_name":"PrestoNumFailedQueries","cloudwatch_unit":"Count","presto_metrics_type":"query"},
+    {"presto_name":"queued_queries","cloudwatch_name":"PrestoNumQueuedQueries","cloudwatch_unit":"Count","presto_metrics_type":"query"},
+    {"presto_name":"queued_time.five_minutes.avg","cloudwatch_name":"QUEUED_TIME_FIVE_MINUTES_AVG","cloudwatch_unit":"Milliseconds","presto_metrics_type":"query"},
+    {"presto_name":"running_queries","cloudwatch_name":"PrestoNumRunningQueries","cloudwatch_unit":"Count","presto_metrics_type":"query"},
+    {"presto_name":"node_metrics","cloudwatch_name":"PrestoNumWorkerNodes","cloudwatch_unit":"Count","presto_metrics_type":"node"}
+]
