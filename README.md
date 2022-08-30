@@ -129,7 +129,9 @@ Lambda 部署需要：
 2. 创建`emr-presto-as-func`函数
 ![lambda-setting](./images/lambda-setting.png)
     > 运行时选择 `Ruby 2.7`
+
     > 架构选择 `x86_64`
+    
     > 角色选择一步创建的`EMRPrestoAutoscallingLambdaRole`
 
     ![lambda-vpc](./images/lambda-vpc.png)
@@ -152,7 +154,7 @@ Lambda 部署需要：
     > `MATCH_NAME` 匹配的EMR集群名称，表示哪些EMR集群会被采集信息，支持模糊匹配
 
     > `PRESTO_PORT` EMR Presto 指标访问端口，默认为`8889`
-    
+
     > `REGION` 访问区域，默认为`us-east-1`
 
 5. 更新Lambda代码
