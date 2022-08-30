@@ -123,6 +123,7 @@ Lambda 部署需要：
     把`layer.zip`下载到本地或者上传到S3，用来创建Lambda层
     ![layered](./images/create-layer.png)
     > 兼容架构选择 `x86_64`
+
     > 兼容运行时选择 `Ruby 2.7`
 
 2. 创建`emr-presto-as-func`函数
@@ -133,7 +134,9 @@ Lambda 部署需要：
 
     ![lambda-vpc](./images/lambda-vpc.png)
     > VPC 选择和EMR同一个VPC
+
     > 子网选择和EMR集群同一个子网，建议选2个以上（一个和EMR一样，一个可以不一样）
+
     > 安全组选择和EMR Master的一样（也可以不一样，需要EMR Master 安全组开放 Lambda 自定义安全组`8889`端口访问权限）
 
 3. 为Lambda函数添加layer
@@ -147,7 +150,9 @@ Lambda 部署需要：
 
     ![env-setting](./images/lambda-setting-env.png)
     > `MATCH_NAME` 匹配的EMR集群名称，表示哪些EMR集群会被采集信息，支持模糊匹配
+
     > `PRESTO_PORT` EMR Presto 指标访问端口，默认为`8889`
+    
     > `REGION` 访问区域，默认为`us-east-1`
 
 5. 更新Lambda代码
