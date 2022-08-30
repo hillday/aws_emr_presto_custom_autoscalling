@@ -65,7 +65,85 @@ sh create_cluster.sh
 ```
 *集群参数 `KeyName`,`SubnetId`,`EmrManagedMasterSecurityGroup`,`EmrManagedSlaveSecurityGroup` 根据需要进行设置*
 
-创建成功后可以到控制台看到集群启动状态。
+创建成功后可以到控制台看到集群启动状态。`instancegroupconfig.json`是自定义的集群伸缩策略：
+```json
+[
+...
+    {
+       "InstanceCount":7,
+       "AutoScalingPolicy":{
+          "Constraints":{
+             "MinCapacity":3,
+             "MaxCapacity":10
+          },
+          "Rules":[
+             {
+                "Action":{
+                   "SimpleScalingPolicyConfiguration":{
+                      "ScalingAdjustment":1,
+                      "CoolDown":60,
+                      "AdjustmentType":"CHANGE_IN_CAPACITY"
+                   }
+                },
+                "Description":"",
+                "Trigger":{
+                   "CloudWatchAlarmDefinition":{
+                      "MetricName":"PrestoInputBytes5m",
+                      "ComparisonOperator":"GREATER_THAN_OR_EQUAL",
+                      "Statistic":"MAXIMUM",
+                      "Period":60,
+                      "Dimensions":[
+                         {
+                            "Value":"${emr.clusterId}",
+                            "Key":"JobFlowId"
+                         }
+                      ],
+                      "EvaluationPeriods":1,
+                      "Unit":"BYTES",
+                      "Namespace":"AWS/ElasticMapReduce",
+                      "Threshold":100
+                   }
+                },
+                "Name":"scale-out-query-time-5"
+             },
+             {
+                "Action":{
+                   "SimpleScalingPolicyConfiguration":{
+                      "ScalingAdjustment":-1,
+                      "CoolDown":60,
+                      "AdjustmentType":"CHANGE_IN_CAPACITY"
+                   }
+                },
+                "Description":"",
+                "Trigger":{
+                   "CloudWatchAlarmDefinition":{
+                      "MetricName":"PrestoInputBytes5m",
+                      "ComparisonOperator":"LESS_THAN",
+                      "Statistic":"MINIMUM",
+                      "Period":60,
+                      "Dimensions":[
+                         {
+                            "Value":"${emr.clusterId}",
+                            "Key":"JobFlowId"
+                         }
+                      ],
+                      "EvaluationPeriods":1,
+                      "Unit":"BYTES",
+                      "Namespace":"AWS/ElasticMapReduce",
+                      "Threshold":50
+                   }
+                },
+                "Name":"scalein-input-time5"
+             }
+          ]
+       },
+       "InstanceGroupType":"TASK",
+       "InstanceType":"c6g.4xlarge",
+       "Name":"Task"
+    }
+ ]
+```
+自动伸缩主要作用在`Task`实例组，`MinCapacity`表示最小实例数，`MaxCapacity`表示最大实例数。`ScalingAdjustment` 为`1`是扩展规则，`-1`是收缩规则，`MetricName`是触发规则所用指标，此案例用的是`PrestoInputBytes5m`,其他指标也可以使用。`Period`表示监控的周期,单位为秒，`EvaluationPeriods` 表示周期内评估次数，`Threshold`表示阈值，`Unit` 表示监控指标和阈值的单位。扩缩总的逻辑是，在一个周期内，监控指标值超过阈值的次数大于周期内评估次数。比如此案例触发扩展逻辑是`PrestoInputBytes5m`值在1分钟内有1一次值大于100 `BYTES`就会增加Task节点，直到节点数等于最大值，同理收缩规则也类似。
 
 ### 部署Lambda
 Lambda 部署需要：
