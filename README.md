@@ -9,7 +9,7 @@
   - [目录](#目录)
     - [上手指南](#上手指南)
           - [配置要求](#配置要求)
-          - [**安装步骤**](#安装步骤)
+          - [安装步骤](#安装步骤)
     - [文件目录说明](#文件目录说明)
     - [部署EMR Presto集群](#部署emr-presto集群)
     - [部署Lambda](#部署lambda)
@@ -36,7 +36,7 @@
 2. Lambda Ruby 2.7.0
 3. AWS CLI 2.0
 
-###### **安装步骤**
+###### 安装步骤
 ```sh
 git clone https://github.com/hillday/aws_emr_presto_custom_autoscalling.git
 ```
