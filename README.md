@@ -2,7 +2,7 @@
 
 # AWS EMR Presto 集群自定义扩缩
 
-基于 Presto 指标自动扩缩可以获得更好的查询性能并最大限度地降低成本。本项目通过EventBridge 定时调用AWS Ruby Lambda 获取EMR 集群信息及EMR Presto集群指标值，并发送到AWS CloudWatch上，当触发自定义扩缩告警策略时，执行EMR Presto集群的扩缩。
+基于 Presto 指标自动扩缩可以获得更好的查询性能并最大限度地降低成本。本项目通过EventBridge 定时调用AWS Ruby Lambda 获取EMR 集群信息及EMR Presto集群指标值，并发送到AWS CloudWatch上。当触发自定义扩缩告警策略时，执行EMR Presto集群的扩缩。
 ## 目录
 
 - [AWS EMR Presto 集群自定义扩缩](#aws-emr-presto-集群自定义扩缩)
@@ -29,7 +29,7 @@
 3. Lambda 获取EMR 集群信息和Presto指标值，并发送到CloudWatch上
 4. CloudWatch告警触发AutoScalling
 
-*由于一般EMR 集群部署在VPC私有子网中，为了Lambda能够访问集群指标，需要把Lambda也部署在VPC私有子网中，并且VPC有公有子网里部署了NAT能提供私有子网外出访问*
+*由于一般EMR 集群部署在VPC私有子网中，为了Lambda能够访问集群指标，需要把Lambda也部署在VPC私有子网中，并且VPC公有子网里部署了NAT能提供私有子网外出访问*
 
 ###### 配置要求
 
@@ -58,7 +58,7 @@ aws_emr_presto_custom_autoscalling
 ```
 
 ### 部署EMR Presto集群
-通过AWS CLI（需要有相应的权限）创建EMR Presto集群，进入`emr`目录执行创建集群脚本。
+通过AWS CLI（已通过aws configure配置好用户权限）创建EMR Presto集群。进入`emr`目录执行创建集群脚本。
 ```sh
 cd emr/
 sh create_cluster.sh
@@ -143,7 +143,7 @@ sh create_cluster.sh
     }
  ]
 ```
-自动伸缩主要作用在`Task`实例组，`MinCapacity`表示最小实例数，`MaxCapacity`表示最大实例数。`ScalingAdjustment` 为`1`是扩展规则，`-1`是收缩规则，`MetricName`是触发规则所用指标，此案例用的是`PrestoInputBytes5m`,其他指标也可以使用。`Period`表示监控的周期,单位为秒，`EvaluationPeriods` 表示周期内评估次数，`Threshold`表示阈值，`Unit` 表示监控指标和阈值的单位。扩缩总的逻辑是，在一个周期内，监控指标值超过阈值的次数大于周期内评估次数。比如此案例触发扩展逻辑是`PrestoInputBytes5m`值在1分钟内有1一次值大于100 `BYTES`就会增加Task节点，直到节点数等于最大值，同理收缩规则也类似。
+自动伸缩主要作用在`Task`实例组，`MinCapacity`表示最小实例数，`MaxCapacity`表示最大实例数。`ScalingAdjustment` 为`1`是扩展规则，`-1`是收缩规则，`MetricName`是触发规则所用指标，此案例用的是`PrestoInputBytes5m`,其他指标也可以使用。`Period`表示监控的周期,单位为秒，`EvaluationPeriods` 表示周期内评估次数，`Threshold`表示阈值，`Unit` 表示监控指标和阈值的单位。扩缩总的逻辑是，在一个周期内，监控指标值超过阈值的次数大于周期内评估次数。比如此案例触发扩展逻辑是`PrestoInputBytes5m`值在1分钟内有1一次值大于100 `BYTES`就会增加Task节点，直到节点数等于最大值，同理，收缩规则也类似。
 
 ### 部署Lambda
 Lambda 部署需要：
